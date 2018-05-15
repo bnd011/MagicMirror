@@ -1,6 +1,6 @@
 
 ####################################################
-# Names: Jonah Landry, Behram Dossabhoy, Jason Miles
+# Names: Jonah Landry, Behram Dossabhoy, Jason Myles
 # Date:
 # Description: Mirror Assistant GUI 
 ####################################################
