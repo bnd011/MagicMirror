@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 ####################################################
 # Names: Jonah Landry, Behram Dossabhoy, Jason Myles
 # Date:
@@ -9,7 +10,7 @@ import tkFont
 import urllib2, urllib, json
 
 #Add the degree symbol
-deg = "oF"
+deg = "°F"
 
 #For now, just uses the resolution from the pi
 WIDTH = 800
@@ -42,7 +43,7 @@ class GUI(Frame):
         self.pack(fill=BOTH, expand = 1)
 
         #Date and time on the opposite side. 
-        time_frame = Frame(self, width = WIDTH / 5, height = HEIGHT / 7) #sets up the GUI window itself for time
+        time_frame = Frame(self, width = WIDTH / 4, height = HEIGHT / 7) #sets up the GUI window itself for time
         GUI.textTime = Text(time_frame, bg = 'black', fg='white', state= DISABLED, font=self.largeFont, bd= 0, highlightbackground = 'black') #Creates what is essentially an empty text box
         GUI.textTime.pack(expand = 1)
         time_frame.pack(side = RIGHT, anchor = N) #Tells it where to go
@@ -239,17 +240,18 @@ class weatherOriginal(object):
 
     @status.setter
     def status(self, value):
-        if ("snow" in value):
+        print value
+        if ("snow" in value.lower()):
             self._status = r"snow.gif"
-        elif (("hail" in value) or ("sleet" in value)):
+        elif (("hail" in value.lower()) or ("sleet" in value.lower())):
             self._status = r"hail.gif"
-        elif (("storm" in value) or ("hurricane" in value) or ("thunder" in value)):
+        elif (("storm" in value.lower()) or ("hurricane" in value.lower()) or ("thunder" in value.lower())):
             self._status = r"storm.gif"
-        elif (("rain" in value) or ("drizzle" in value)):
+        elif (("rain" in value.lower()) or ("drizzle" in value.lower())):
             self._status = r"rain.gif"
-        elif (("cloudy" in value) or ("smoky" in value) or ("haze" in value)):
+        elif (("cloudy" in value.lower()) or ("smoky" in value.lower()) or ("haze" in value.lower())):
             self._status = r"cloudy.gif"
-        elif ("tornado" in value):
+        elif ("tornado" in value.lower()):
             self._status = r"tornado.gif"
         else:
             self._status = r"sun.gif" #Only one image for now, don't know the other status' names so have only done the one.
@@ -267,17 +269,18 @@ class weather(object):
 
     @status.setter
     def status(self, value):
-        if ("snow" in value):
+        print value
+        if ("snow" in value.lower()):
             self._status = r"ssnow.gif"
-        elif (("hail" in value) or ("sleet" in value)):
+        elif (("hail" in value.lower()) or ("sleet" in value.lower())):
             self._status = r"shail.gif"
-        elif (("storm" in value) or ("hurricane" in value) or ("thunder" in value)):
+        elif (("storm" in value.lower()) or ("hurricane" in value.lower()) or ("thunder" in value.lower())):
             self._status = r"sstorm.gif"
-        elif (("rain" in value) or ("drizzle" in value)):
+        elif (("rain" in value.lower()) or ("drizzle" in value.lower())):
             self._status = r"srain.gif"
-        elif (("cloudy" in value) or ("smoky" in value) or ("haze" in value)):
+        elif (("cloudy" in value.lower()) or ("smoky" in value.lower()) or ("haze" in value.lower())):
             self._status = r"scloudy.gif"
-        elif ("tornado" in value):
+        elif ("tornado" in value.lower()):
             self._status = r"stornado.gif"
         else :
             self._status = r"ssun.gif" #Only one image for now, don't know the other status' names so have only done the one.
@@ -297,13 +300,14 @@ def RetrieveWeather():
     result = urllib2.urlopen(yql_url).read()
     data = json.loads(result)
     forecast = data['query']['results']['channel']['item']['forecast']
+    condition = data['query']['results']['channel']['item']['condition']
     #Weather forecast for today and next three days
     global weather0
     global weather1
     global weather2
     global weather3
     #The first weather report needs to select from a pool of larger images. Accomplished this by using a different variable.
-    weather0 = weatherOriginal(forecast[0]['text'], forecast[0]['high'], forecast[0]['low'], forecast[0]['day'])
+    weather0 = weatherOriginal(condition['text'], forecast[0]['high'], forecast[0]['low'], forecast[0]['day'])
     #Otherwise, weather should be as follows.
     weather1 = weather(forecast[1]['text'], forecast[1]['high'], forecast[1]['low'], forecast[1]['day'])
     weather2 = weather(forecast[2]['text'], forecast[2]['high'], forecast[2]['low'], forecast[2]['day'])
@@ -319,7 +323,7 @@ def RetrieveWeather():
 #weather3 = weather("Ruston, LA", "Sunny", 91, 43, "Wednesday")
 
 #Sample events
-event1 = event("05/13/2018", "22:00", "Jonah finishes his GUI for now.")
+event1 = event("05/15/2018", "16:00", "Jonah finishes his GUI for now.")
 event2 = event("05/16/2018", "08:00", "This project is due.")
 event3 = event("05/18/2018", "13:30", "No more school!")
 
