@@ -7,6 +7,7 @@
 from Tkinter import *
 from time import *
 import tkFont
+import urllib2, urllib, json
 
 #Add the degree symbol
 deg = "oF"
@@ -22,6 +23,8 @@ class GUI(Frame):
     global HEIGHT
     global deg
     global img
+    #Grab the current time to use a baseline for updating the weather
+    weathertimeA = time()
     
     def __init__(self, parent):
         #constructor calls superclass' constructor
@@ -199,9 +202,12 @@ class GUI(Frame):
         GUI.textTime.insert(END, strftime("%I:%M %p \n%A, %B %d ", localtime()))
 
         #Updates the weather as well
-        ##########################  Weather update needs to give a high and a low as well as a status for each date.
-        #WEATHER UPDATE GOES HERE# Once we have the status, go back and add more images and if statements to cover each one
-        ########################## given by whatever weather database we end up using.
+        #If more than thirty minutes have passed since the original weather retrieval, fetch an updated version.
+        weathertimeB = time()
+        if weathertimeB - self.weathertimeA > 1800:
+            self.weathertimeA = weathertimeB
+            RetrieveWeather()
+
         #Fetches new images
         imageFetch()
         #Displays new weather
@@ -222,8 +228,7 @@ class GUI(Frame):
 
 #Example weather class that gives the GUI what it needs. Location is no longer needed for the GUI, but left it in.
 class weatherOriginal(object):
-    def __init__(self, location, status, high, low, date):
-        self.location = location
+    def __init__(self, status, high, low, date):
         self.status = status
         self.high = high
         self.low = low
@@ -239,8 +244,7 @@ class weatherOriginal(object):
             self._status = r"sun.gif" #Only one image for now, don't know the other status' names so have only done the one.
 
 class weather(object):
-    def __init__(self, location, status, high, low, date):
-        self.location = location
+    def __init__(self, status, high, low, date):
         self.status = status
         self.high = high
         self.low = low
@@ -261,21 +265,43 @@ class event(object):
         self.date = date 
         self.time = time
         self.what = what
+        
+#Retrieves Weather
+def RetrieveWeather():
+    baseurl = "https://query.yahooapis.com/v1/public/yql?"
+    yql_query = "select * from weather.forecast where woeid=12788686"
+    yql_url = baseurl + urllib.urlencode({'q':yql_query}) + "&format=json"
+    result = urllib2.urlopen(yql_url).read()
+    data = json.loads(result)
+    forecast = data['query']['results']['channel']['item']['forecast']
+    #Weather forecast for today and next three days
+    global weather0
+    global weather1
+    global weather2
+    global weather3
+    #The first weather report needs to select from a pool of larger images. Accomplished this by using a different variable.
+    weather0 = weatherOriginal(forecast[0]['text'], forecast[0]['high'], forecast[0]['low'], forecast[0]['day'])
+    #Otherwise, weather should be as follows.
+    weather1 = weather(forecast[1]['text'], forecast[1]['high'], forecast[1]['low'], forecast[1]['day'])
+    weather2 = weather(forecast[2]['text'], forecast[2]['high'], forecast[2]['low'], forecast[2]['day'])
+    weather3 = weather(forecast[3]['text'], forecast[3]['high'], forecast[3]['low'], forecast[3]['day'])
 
+#######NO LONGER NEEDED#######
+####Kept for test purposes####
 #The first weather report needs to select from a pool of larger images. Accomplished this by using a different variable.
-weather0 = weatherOriginal("Ruston, LA", "Sunny", 72.23, 56, "Sunday")
-
+#weather0 = weatherOriginal("Ruston, LA", "Sunny", 72.23, 56, "Sunday")
 #Otherwise, weather should be as follows.
-weather1 = weather("Ruston, LA", "Sunny", 90.45, 75, "Monday")
-weather2 = weather("Ruston, LA", "Sunny", 91, 56, "Tuesday")
-weather3 = weather("Ruston, LA", "Sunny", 91, 43, "Wednesday")
+#weather1 = weather("Ruston, LA", "Sunny", 90.45, 75, "Monday")
+#weather2 = weather("Ruston, LA", "Sunny", 91, 56, "Tuesday")
+#weather3 = weather("Ruston, LA", "Sunny", 91, 43, "Wednesday")
 
 #Sample events
 event1 = event("05/13/2018", "21:00", "Jonah finishes his GUI for now.")
 event2 = event("05/16/2018", "08:00", "This project is due.")
 event3 = event("05/18/2018", "13:30", "No more school!")
 
-
+#Gather the weather data.
+RetrieveWeather()
 
 #create the window
 window = Tk()
