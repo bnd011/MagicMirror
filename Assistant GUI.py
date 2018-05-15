@@ -1,4 +1,3 @@
-
 ####################################################
 # Names: Jonah Landry, Behram Dossabhoy, Jason Myles
 # Date:
@@ -44,7 +43,7 @@ class GUI(Frame):
 
         #Date and time on the opposite side. 
         time_frame = Frame(self, width = WIDTH / 5, height = HEIGHT / 7) #sets up the GUI window itself for time
-        GUI.textTime = Text(time_frame, bg = 'black', fg='white', state= DISABLED, font=self.largeFont, bd= 0) #Creates what is essentially an empty text box
+        GUI.textTime = Text(time_frame, bg = 'black', fg='white', state= DISABLED, font=self.largeFont, bd= 0, highlightbackground = 'black') #Creates what is essentially an empty text box
         GUI.textTime.pack(expand = 1)
         time_frame.pack(side = RIGHT, anchor = N) #Tells it where to go
         time_frame.pack_propagate(False)
@@ -52,7 +51,7 @@ class GUI(Frame):
         #The top left corner is for the weather report
         #Labels for Image + Text
         weather_label0 = Frame(self, bg= 'black', bd = 0, width = WIDTH / 2, height = HEIGHT/10)
-        GUI.textW0 = Text(weather_label0, bg='black', fg='white', state = DISABLED, font=self.largeFont, bd = 0)
+        GUI.textW0 = Text(weather_label0, bg='black', fg='white', state = DISABLED, font=self.largeFont, bd = 0, highlightbackground = 'black')
         GUI.textW0.pack( expand = 1)
         weather_label0.pack(side = TOP, anchor = W)
         weather_label0.pack_propagate(False)
@@ -60,19 +59,19 @@ class GUI(Frame):
         
                 
         weather_label1 = Frame(self, width=WIDTH / 2, height=HEIGHT / 16)
-        GUI.textW1 = Text(weather_label1, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0)
+        GUI.textW1 = Text(weather_label1, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0, highlightbackground = 'black')
         GUI.textW1.pack(fill = BOTH, expand = 1)
         weather_label1.pack(side=TOP, anchor= W)
         weather_label1.pack_propagate(False)
 
         weather_label2 = Frame(self, width=WIDTH / 2, height=HEIGHT / 16)
-        GUI.textW2 = Text(weather_label2, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0)
+        GUI.textW2 = Text(weather_label2, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0, highlightbackground = 'black')
         GUI.textW2.pack(fill = BOTH, expand = 1)
         weather_label2.pack(side=TOP, anchor= W)
         weather_label2.pack_propagate(False)
 
         weather_label3 = Frame(self, width=WIDTH / 2, height=HEIGHT / 16)
-        GUI.textW3 = Text(weather_label3, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0)
+        GUI.textW3 = Text(weather_label3, bg='black', fg='white', state = DISABLED, font= self.normalFont, bd = 0, highlightbackground = 'black')
         GUI.textW3.pack(fill = BOTH, expand = 1)
         weather_label3.pack(side=TOP, anchor= W)
         weather_label3.pack_propagate(False)
@@ -83,25 +82,25 @@ class GUI(Frame):
 
         #Sets aside an area for calendar, done in reverse order due to the nature of the stack
         cal_label3 = Frame(self, height = HEIGHT/13, width = WIDTH)
-        GUI.textC3 = Text(cal_label3, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont)
+        GUI.textC3 = Text(cal_label3, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont, highlightbackground = 'black')
         GUI.textC3.pack(fill = BOTH, expand = 1)
         cal_label3.pack(side = BOTTOM, anchor = W)
         cal_label3.pack_propagate(False)
 
         cal_label2 = Frame(self, height = HEIGHT/13, width = WIDTH)
-        GUI.textC2 = Text(cal_label2, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont)
+        GUI.textC2 = Text(cal_label2, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont, highlightbackground = 'black')
         GUI.textC2.pack(fill = BOTH, expand = 1)
         cal_label2.pack(side = BOTTOM, anchor = W)
         cal_label2.pack_propagate(False)
 
         cal_label1 = Frame(self, height = HEIGHT/13, width = WIDTH)
-        GUI.textC1 = Text(cal_label1, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont)
+        GUI.textC1 = Text(cal_label1, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.normalFont, highlightbackground = 'black')
         GUI.textC1.pack(fill = BOTH, expand = 1)
         cal_label1.pack(side = BOTTOM, anchor = W)
         cal_label1.pack_propagate(False)
 
         cal_label0 = Frame(self, height = HEIGHT/15, width = WIDTH)
-        GUI.textC0 = Text(cal_label0, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.largeFont)
+        GUI.textC0 = Text(cal_label0, bg = 'black', fg = 'white', bd = 0, state = DISABLED, font = self.largeFont, highlightbackground = 'black')
         GUI.textC0.pack(fill = BOTH, expand = 1)
         cal_label0.pack(side = BOTTOM, anchor = W)
         cal_label0.pack_propagate(False)
@@ -240,7 +239,19 @@ class weatherOriginal(object):
 
     @status.setter
     def status(self, value):
-        if (value == "Sunny"):
+        if ("snow" in value):
+            self._status = r"snow.gif"
+        elif (("hail" in value) or ("sleet" in value)):
+            self._status = r"hail.gif"
+        elif (("storm" in value) or ("hurricane" in value) or ("thunder" in value)):
+            self._status = r"storm.gif"
+        elif (("rain" in value) or ("drizzle" in value)):
+            self._status = r"rain.gif"
+        elif (("cloudy" in value) or ("smoky" in value) or ("haze" in value)):
+            self._status = r"cloudy.gif"
+        elif ("tornado" in value):
+            self._status = r"tornado.gif"
+        else:
             self._status = r"sun.gif" #Only one image for now, don't know the other status' names so have only done the one.
 
 class weather(object):
@@ -256,7 +267,19 @@ class weather(object):
 
     @status.setter
     def status(self, value):
-        if (value == "Sunny"):
+        if ("snow" in value):
+            self._status = r"ssnow.gif"
+        elif (("hail" in value) or ("sleet" in value)):
+            self._status = r"shail.gif"
+        elif (("storm" in value) or ("hurricane" in value) or ("thunder" in value)):
+            self._status = r"sstorm.gif"
+        elif (("rain" in value) or ("drizzle" in value)):
+            self._status = r"srain.gif"
+        elif (("cloudy" in value) or ("smoky" in value) or ("haze" in value)):
+            self._status = r"scloudy.gif"
+        elif ("tornado" in value):
+            self._status = r"stornado.gif"
+        else :
             self._status = r"ssun.gif" #Only one image for now, don't know the other status' names so have only done the one.
 
 #Example Event class. Date is the day in "MM/DD/YYYY" format, the time is the time it's at in 24 hour "HH:MM", and the what is what the event is like "Presentation at Nethken"
@@ -296,7 +319,7 @@ def RetrieveWeather():
 #weather3 = weather("Ruston, LA", "Sunny", 91, 43, "Wednesday")
 
 #Sample events
-event1 = event("05/13/2018", "21:00", "Jonah finishes his GUI for now.")
+event1 = event("05/13/2018", "22:00", "Jonah finishes his GUI for now.")
 event2 = event("05/16/2018", "08:00", "This project is due.")
 event3 = event("05/18/2018", "13:30", "No more school!")
 
@@ -331,4 +354,3 @@ def imageFetch():
 mirror.setupGUI()
 window.after(1000, mirror.updateGUI)
 window.mainloop()
-
