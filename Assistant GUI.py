@@ -255,7 +255,7 @@ class weather(object):
         if (value == "Sunny"):
             self._status = r"ssun.gif" #Only one image for now, don't know the other status' names so have only done the one.
 
-#Example Event class. Date is the day in "MM/DD/YYYY" format, the time is the time it's at in 24 hour "HH:MM", and the what is what the event is like "Presentation at Nethkin"
+#Example Event class. Date is the day in "MM/DD/YYYY" format, the time is the time it's at in 24 hour "HH:MM", and the what is what the event is like "Presentation at Nethken"
 class event(object):
     def __init__(self, date, time, what):
         self.date = date 
