@@ -146,7 +146,7 @@ class GUI(Frame):
             GUI.textW0.delete("1.0",END)
             GUI.textW0.config(state=NORMAL)
             GUI.textW0.image_create(END, image = img0)
-            GUI.textW0.insert(END, "High:{} {} | Low: {} {}".format( weather.high,deg, weather.low, deg))
+            GUI.textW0.insert(END, "{} {} | High:{} {} | Low: {} {}".format(weather.currentTemp, deg, weather.high,deg, weather.low, deg))
 
         if (frameNum == 1):
             GUI.textW1.delete("1.0",END)
@@ -228,11 +228,12 @@ class GUI(Frame):
 
 #Example weather class that gives the GUI what it needs. Location is no longer needed for the GUI, but left it in.
 class weatherOriginal(object):
-    def __init__(self, status, high, low, date):
+    def __init__(self, status, high, low, date, currentTemp):
         self.status = status
         self.high = high
         self.low = low
         self.date = date
+        self.currentTemp = currentTemp
         
     @property
     def status(self):
@@ -240,14 +241,13 @@ class weatherOriginal(object):
 
     @status.setter
     def status(self, value):
-        print value
         if ("snow" in value.lower()):
             self._status = r"snow.gif"
         elif (("hail" in value.lower()) or ("sleet" in value.lower())):
             self._status = r"hail.gif"
         elif (("storm" in value.lower()) or ("hurricane" in value.lower()) or ("thunder" in value.lower())):
             self._status = r"storm.gif"
-        elif (("rain" in value.lower()) or ("drizzle" in value.lower())):
+        elif (("rain" in value.lower()) or ("drizzle" in value.lower()) or ("shower" in value.lower())):
             self._status = r"rain.gif"
         elif (("cloudy" in value.lower()) or ("smoky" in value.lower()) or ("haze" in value.lower())):
             self._status = r"cloudy.gif"
@@ -269,14 +269,13 @@ class weather(object):
 
     @status.setter
     def status(self, value):
-        print value
         if ("snow" in value.lower()):
             self._status = r"ssnow.gif"
         elif (("hail" in value.lower()) or ("sleet" in value.lower())):
             self._status = r"shail.gif"
         elif (("storm" in value.lower()) or ("hurricane" in value.lower()) or ("thunder" in value.lower())):
             self._status = r"sstorm.gif"
-        elif (("rain" in value.lower()) or ("drizzle" in value.lower())):
+        elif (("rain" in value.lower()) or ("drizzle" in value.lower()) or ("shower" in value.lower())):
             self._status = r"srain.gif"
         elif (("cloudy" in value.lower()) or ("smoky" in value.lower()) or ("haze" in value.lower())):
             self._status = r"scloudy.gif"
@@ -307,7 +306,7 @@ def RetrieveWeather():
     global weather2
     global weather3
     #The first weather report needs to select from a pool of larger images. Accomplished this by using a different variable.
-    weather0 = weatherOriginal(condition['text'], forecast[0]['high'], forecast[0]['low'], forecast[0]['day'])
+    weather0 = weatherOriginal(condition['text'], forecast[0]['high'], forecast[0]['low'], forecast[0]['day'], condition['temp'])
     #Otherwise, weather should be as follows.
     weather1 = weather(forecast[1]['text'], forecast[1]['high'], forecast[1]['low'], forecast[1]['day'])
     weather2 = weather(forecast[2]['text'], forecast[2]['high'], forecast[2]['low'], forecast[2]['day'])
