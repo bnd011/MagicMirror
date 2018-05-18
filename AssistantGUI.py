@@ -297,7 +297,7 @@ class weather(object):
 
 
 # Example Event class. Date is the day in "MM/DD/YYYY" format, the time is the time it's at in 24 hour "HH:MM", and the what is what the event is like "Presentation at Nethken"
-class setEvent(object):
+class event(object):
     def __init__(self, date, time, what):
         self.date = date
         self.time = time
@@ -337,12 +337,33 @@ def RetrieveWeather():
 # weather3 = weather("Ruston, LA", "Sunny", 91, 43, "Wednesday")
 
 
+# Setup the Calendar API
+SCOPES = 'https://www.googleapis.com/auth/calendar.readonly'
+store = file.Storage('credentials.json')
+creds = store.get()
+if not creds or creds.invalid:
+    flow = client.flow_from_clientsecrets('client_secret.json', SCOPES)
+    creds = tools.run_flow(flow, store)
+service = build('calendar', 'v3', http=creds.authorize(Http()))
 
+# Call the Calendar API
+now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+print('Getting the upcoming 3 events')
+events_result = service.events().list(calendarId='primary', timeMin=now,
+                                      maxResults=3, singleEvents=True,
+                                      orderBy='startTime').execute()
+events = events_result.get('items', [])
+
+if not events:
+    print('No upcoming events found.')
+for event in events:
+    start = event['start'].get('dateTime', event['start'].get('date'))
+    print(start, event['summary'])
 
 # Sample events
-event1 = setEvent("05/18/2018", "08:00", "CYEN Writeup")
-event2 = setEvent("05/18/2018", "08:00", "Physics Test 3")
-event3 = setEvent("05/18/2018", "09:30", "CYEN Test 3")
+event1 = event("05/18/2018", "08:00", "CYEN Writeup")
+event2 = event("05/18/2018", "08:00", "Physics Test 3")
+event3 = event("05/18/2018", "09:30", "CYEN Test 3")
 
 # Gather the weather data.
 RetrieveWeather()
@@ -352,6 +373,7 @@ window = Tk()
 window.title("Personal Assistant")
 mirror = GUI(window)
 window.geometry('800x500')
+
 
 # Images to be displayed in GUI need to be declared before hand.
 img0 = None
